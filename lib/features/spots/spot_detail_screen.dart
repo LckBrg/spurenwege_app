@@ -17,56 +17,134 @@ class _SpotDetailScreenState extends State<SpotDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isFav = repo.isFavorite(widget.spot);
+    final spot = widget.spot;
+    final isFav = repo.isFavorite(spot);
+    final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.spot.title),
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                repo.toggleFavorite(widget.spot);
-              });
-            },
-            icon: Icon(isFav ? Icons.bookmark : Icons.bookmark_border),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(24),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(24),
-                color: Theme.of(context).colorScheme.secondaryContainer,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 240,
+            pinned: true,
+            backgroundColor: Colors.transparent,
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
+              title: Text(
+                spot.title,
+                style: const TextStyle(fontWeight: FontWeight.w700),
               ),
+              background: Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF355C7D), Color(0xFF6C5B7B)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: const Center(
+                  child: Icon(
+                    Icons.place_rounded,
+                    size: 80,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    repo.toggleFavorite(spot);
+                  });
+                },
+                icon: Icon(isFav ? Icons.bookmark : Icons.bookmark_border),
+              ),
+            ],
+          ),
+
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  /// Meta Infos
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      _InfoTag(label: spot.city),
+                      _InfoTag(label: spot.category),
+                      _InfoTag(
+                        label: '${spot.estimatedDuration.inMinutes} Minuten',
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// Einleitung
+                  Text('Über diesen Ort', style: theme.textTheme.titleLarge),
+                  const SizedBox(height: 8),
+                  Text(spot.shortDescription, style: theme.textTheme.bodyLarge),
+
+                  const SizedBox(height: 24),
+
+                  /// Details
                   Text(
-                    widget.spot.title,
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    'Geschichte & Details',
+                    style: theme.textTheme.titleLarge,
                   ),
                   const SizedBox(height: 8),
-                  Text('${widget.spot.city} • ${widget.spot.category}'),
-                  const SizedBox(height: 8),
-                  Text('Dauer: ${widget.spot.estimatedDuration.inMinutes} min'),
+                  Text(spot.longDescription, style: theme.textTheme.bodyLarge),
+
+                  const SizedBox(height: 32),
+
+                  /// CTA Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: () {},
+                      icon: const Icon(Icons.route),
+                      label: const Text('Route starten (später)'),
+                      style: FilledButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        textStyle: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-            const SizedBox(height: 20),
-            Text('Details', style: Theme.of(context).textTheme.titleLarge),
-            const SizedBox(height: 8),
-            Text(widget.spot.longDescription),
-          ],
-        ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InfoTag extends StatelessWidget {
+  final String label;
+
+  const _InfoTag({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF2F4F7),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: Theme.of(
+          context,
+        ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
       ),
     );
   }
