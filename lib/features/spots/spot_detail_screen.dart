@@ -15,6 +15,19 @@ class SpotDetailScreen extends StatefulWidget {
 class _SpotDetailScreenState extends State<SpotDetailScreen> {
   final repo = FavoritesRepository();
 
+  String getHeaderImage() {
+    switch (widget.spot.title) {
+      case 'Gasserplatz':
+        return 'assets/images/spots/gasserplatz.jpg';
+      case 'Schattenburg':
+        return 'assets/images/spots/schattenburg.jpg';
+      case 'Altstadt Bludenz':
+        return 'assets/images/spots/bludenz.jpg';
+      default:
+        return 'assets/images/spots/schattenburg.jpg';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final spot = widget.spot;
@@ -25,32 +38,9 @@ class _SpotDetailScreenState extends State<SpotDetailScreen> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
-            expandedHeight: 240,
+            expandedHeight: 280,
             pinned: true,
-            backgroundColor: Colors.transparent,
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.only(left: 16, bottom: 16),
-              title: Text(
-                spot.title,
-                style: const TextStyle(fontWeight: FontWeight.w700),
-              ),
-              background: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [Color(0xFF355C7D), Color(0xFF6C5B7B)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                ),
-                child: const Center(
-                  child: Icon(
-                    Icons.place_rounded,
-                    size: 80,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
+            backgroundColor: const Color(0xFF171A22),
             actions: [
               IconButton(
                 onPressed: () {
@@ -61,15 +51,47 @@ class _SpotDetailScreenState extends State<SpotDetailScreen> {
                 icon: Icon(isFav ? Icons.bookmark : Icons.bookmark_border),
               ),
             ],
+            flexibleSpace: FlexibleSpaceBar(
+              titlePadding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                bottom: 16,
+              ),
+              title: Text(
+                spot.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  shadows: [Shadow(blurRadius: 8, color: Colors.black54)],
+                ),
+              ),
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.asset(getHeaderImage(), fit: BoxFit.cover),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.black.withOpacity(0.15),
+                          Colors.black.withOpacity(0.35),
+                          Colors.black.withOpacity(0.72),
+                        ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-
           SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+            child: Container(
+              color: const Color(0xFF171A22),
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 28),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /// Meta Infos
                   Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -81,27 +103,18 @@ class _SpotDetailScreenState extends State<SpotDetailScreen> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 20),
-
-                  /// Einleitung
                   Text('Über diesen Ort', style: theme.textTheme.titleLarge),
                   const SizedBox(height: 8),
                   Text(spot.shortDescription, style: theme.textTheme.bodyLarge),
-
                   const SizedBox(height: 24),
-
-                  /// Details
                   Text(
                     'Geschichte & Details',
                     style: theme.textTheme.titleLarge,
                   ),
                   const SizedBox(height: 8),
                   Text(spot.longDescription, style: theme.textTheme.bodyLarge),
-
                   const SizedBox(height: 32),
-
-                  /// CTA Button
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton.icon(
@@ -110,10 +123,6 @@ class _SpotDetailScreenState extends State<SpotDetailScreen> {
                       label: const Text('Route starten (später)'),
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        textStyle: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
                       ),
                     ),
                   ),
@@ -135,16 +144,17 @@ class _InfoTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: const Color(0xFFF2F4F7),
+        color: Colors.white.withOpacity(0.10),
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
         label,
-        style: Theme.of(
-          context,
-        ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w600),
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
