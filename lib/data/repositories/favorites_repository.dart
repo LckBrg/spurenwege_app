@@ -7,21 +7,44 @@ class FavoritesRepository {
 
   FavoritesRepository._internal();
 
-  final List<Spot> _favorites = [];
+  final List<Spot> _favoriteSpots = [];
+  final List<String> _favoriteRouteIds = [];
 
+  // ----------------------------
+  // Spot-Favoriten (alte Screens)
+  // ----------------------------
   List<Spot> getFavorites() {
-    return List.unmodifiable(_favorites);
+    return List.unmodifiable(_favoriteSpots);
   }
 
   bool isFavorite(Spot spot) {
-    return _favorites.any((s) => s.id == spot.id);
+    return _favoriteSpots.any((s) => s.id == spot.id);
   }
 
   void toggleFavorite(Spot spot) {
     if (isFavorite(spot)) {
-      _favorites.removeWhere((s) => s.id == spot.id);
+      _favoriteSpots.removeWhere((s) => s.id == spot.id);
     } else {
-      _favorites.add(spot);
+      _favoriteSpots.add(spot);
+    }
+  }
+
+  // ----------------------------
+  // Routen-Favoriten (neuer Homescreen)
+  // ----------------------------
+  List<String> getFavoriteRouteIds() {
+    return List.unmodifiable(_favoriteRouteIds);
+  }
+
+  bool isRouteFavorite(String routeId) {
+    return _favoriteRouteIds.contains(routeId);
+  }
+
+  void toggleRouteFavorite(String routeId) {
+    if (isRouteFavorite(routeId)) {
+      _favoriteRouteIds.remove(routeId);
+    } else {
+      _favoriteRouteIds.add(routeId);
     }
   }
 }

@@ -1,133 +1,171 @@
 import 'package:flutter/material.dart';
 
+import '../../data/demo/demo_routes.dart';
+import '../../data/models/route_model.dart';
 import '../../data/models/spot.dart';
-import '../../data/repositories/favorites_repository.dart';
+import '../routes/route_player_screen.dart';
 
-class SpotDetailScreen extends StatefulWidget {
+class SpotDetailScreen extends StatelessWidget {
   final Spot spot;
 
-  const SpotDetailScreen({super.key, required this.spot});
+  const SpotDetailScreen({
+    super.key,
+    required this.spot,
+  });
 
-  @override
-  State<SpotDetailScreen> createState() => _SpotDetailScreenState();
-}
-
-class _SpotDetailScreenState extends State<SpotDetailScreen> {
-  final repo = FavoritesRepository();
-
-  String getHeaderImage() {
-    switch (widget.spot.title) {
-      case 'Gasserplatz':
-        return 'assets/images/spots/gasserplatz.jpg';
-      case 'Schattenburg':
-        return 'assets/images/spots/schattenburg.jpg';
-      case 'Altstadt Bludenz':
-        return 'assets/images/spots/bludenz.jpg';
-      default:
-        return 'assets/images/spots/schattenburg.jpg';
+  RouteModel? _findRouteForSpot() {
+    for (final route in demoRoutes) {
+      final match = route.spots.any((routeSpot) => routeSpot.id == spot.id);
+      if (match) {
+        return route;
+      }
     }
+    return null;
+  }
+
+  int _findSpotIndexInRoute(RouteModel route) {
+    return route.spots.indexWhere((routeSpot) => routeSpot.id == spot.id);
   }
 
   @override
   Widget build(BuildContext context) {
-    final spot = widget.spot;
-    final isFav = repo.isFavorite(spot);
-    final theme = Theme.of(context);
+    final matchingRoute = _findRouteForSpot();
 
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            expandedHeight: 280,
-            pinned: true,
-            backgroundColor: const Color(0xFF171A22),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    repo.toggleFavorite(spot);
-                  });
-                },
-                icon: Icon(isFav ? Icons.bookmark : Icons.bookmark_border),
-              ),
-            ],
-            flexibleSpace: FlexibleSpaceBar(
-              titlePadding: const EdgeInsets.only(
-                left: 16,
-                right: 16,
-                bottom: 16,
-              ),
-              title: Text(
-                spot.title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  shadows: [Shadow(blurRadius: 8, color: Colors.black54)],
+      backgroundColor: const Color(0xFF0B0F14),
+      body: ListView(
+        children: [
+          Stack(
+            children: [
+              SizedBox(
+                height: 320,
+                width: double.infinity,
+                child: Image.asset(
+                  spot.imagePath,
+                  fit: BoxFit.cover,
                 ),
               ),
-              background: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.asset(getHeaderImage(), fit: BoxFit.cover),
-                  Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Colors.black.withOpacity(0.15),
-                          Colors.black.withOpacity(0.35),
-                          Colors.black.withOpacity(0.72),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                    ),
+              Positioned(
+                top: 48,
+                left: 16,
+                child: CircleAvatar(
+                  backgroundColor: Colors.black54,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                   ),
-                ],
+                ),
               ),
-            ),
+              Positioned(
+                top: 48,
+                right: 16,
+                child: CircleAvatar(
+                  backgroundColor: Colors.black54,
+                  child: IconButton(
+                    icon: const Icon(Icons.bookmark_border, color: Colors.white),
+                    onPressed: () {},
+                  ),
+                ),
+              ),
+              Positioned(
+                left: 24,
+                right: 24,
+                bottom: 20,
+                child: Text(
+                  spot.title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ],
           ),
-          SliverToBoxAdapter(
-            child: Container(
-              color: const Color(0xFF171A22),
-              padding: const EdgeInsets.fromLTRB(16, 20, 16, 28),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      _InfoTag(label: spot.city),
-                      _InfoTag(label: spot.category),
-                      _InfoTag(
-                        label: '${spot.estimatedDuration.inMinutes} Minuten',
-                      ),
-                    ],
+          Container(
+            color: const Color(0xFF0B0F14),
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    _InfoChip(label: spot.city),
+                    _InfoChip(label: spot.category),
+                    _InfoChip(
+                      label: '${spot.estimatedDuration.inMinutes} Minuten',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 28),
+                const Text(
+                  'Über diesen Ort',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
                   ),
-                  const SizedBox(height: 20),
-                  Text('Über diesen Ort', style: theme.textTheme.titleLarge),
-                  const SizedBox(height: 8),
-                  Text(spot.shortDescription, style: theme.textTheme.bodyLarge),
-                  const SizedBox(height: 24),
-                  Text(
-                    'Geschichte & Details',
-                    style: theme.textTheme.titleLarge,
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  spot.shortDescription,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 15,
+                    height: 1.5,
                   ),
-                  const SizedBox(height: 8),
-                  Text(spot.longDescription, style: theme.textTheme.bodyLarge),
-                  const SizedBox(height: 32),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.route),
-                      label: const Text('Route starten (später)'),
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                      ),
+                ),
+                const SizedBox(height: 28),
+                const Text(
+                  'Geschichte & Details',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  spot.longDescription,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 15,
+                    height: 1.7,
+                  ),
+                ),
+                const SizedBox(height: 28),
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton.icon(
+                    onPressed: matchingRoute == null
+                        ? null
+                        : () {
+                            final startIndex =
+                                _findSpotIndexInRoute(matchingRoute);
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => RoutePlayerScreen(
+                                  route: matchingRoute,
+                                  initialIndex: startIndex < 0 ? 0 : startIndex,
+                                ),
+                              ),
+                            );
+                          },
+                    icon: const Icon(Icons.route),
+                    label: Text(
+                      matchingRoute == null
+                          ? 'Keine Route verfügbar'
+                          : 'Route starten',
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
@@ -136,23 +174,24 @@ class _SpotDetailScreenState extends State<SpotDetailScreen> {
   }
 }
 
-class _InfoTag extends StatelessWidget {
+class _InfoChip extends StatelessWidget {
   final String label;
 
-  const _InfoTag({required this.label});
+  const _InfoChip({required this.label});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.10),
+        color: const Color(0xFF2B3140),
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(
         label,
-        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+        style: const TextStyle(
           color: Colors.white,
+          fontSize: 14,
           fontWeight: FontWeight.w600,
         ),
       ),

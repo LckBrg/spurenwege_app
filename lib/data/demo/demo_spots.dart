@@ -1,46 +1,37 @@
 import '../models/spot.dart';
 
-const List<Spot> demoSpots = [
+const demoSpots = [
   Spot(
-    id: 'feldkirch-gasserplatz',
-    title: 'Gasserplatz',
-    city: 'Feldkirch',
-    shortDescription: 'Ein geschichtsträchtiger Ort mit düsterem Hintergrund.',
-    longDescription:
-        'Der Gasserplatz in Feldkirch ist ein Ort, der auf den ersten Blick '
-        'unscheinbar wirken kann. Gerade solche Plätze sind für Spurenwege '
-        'interessant: Orte, an denen Geschichte nicht laut, sondern leise '
-        'weiterlebt. Hier könnte später ein Story-Spot mit Text, Audio und '
-        'historischem Kontext entstehen.',
-    category: 'Geschichte',
-    estimatedDuration: Duration(minutes: 20),
-  ),
-  Spot(
-    id: 'feldkirch-schattenburg',
+    id: 'schattenburg',
     title: 'Schattenburg',
     city: 'Feldkirch',
-    shortDescription: 'Die Schattenburg prägt das Stadtbild von Feldkirch.',
+    shortDescription: 'Die bekannte Burg über der Altstadt.',
     longDescription:
-        'Die Schattenburg gehört zu den bekanntesten Wahrzeichen Feldkirchs. '
-        'Für Spurenwege eignet sich dieser Spot ideal, weil sich hier '
-        'Geschichte, Aussicht, Atmosphäre und Erzählung gut verbinden lassen. '
-        'Später können wir hier Stationen, Hinweise und kleine Erlebnisinhalte '
-        'einbauen.',
-    category: 'Sehenswürdigkeit',
-    estimatedDuration: Duration(minutes: 35),
+        'Die Schattenburg thront über Feldkirch und war über Jahrhunderte ein Symbol für Macht und Schutz. Von hier aus hatte man die Stadt und das Tal im Blick.',
+    category: 'Geschichte',
+    estimatedDuration: Duration(minutes: 20),
+    imagePath: 'assets/images/spots/schattenburg.jpg',
   ),
   Spot(
-    id: 'bludenz-altstadt',
+    id: 'marktplatz',
+    title: 'Marktplatz Feldkirch',
+    city: 'Feldkirch',
+    shortDescription: 'Zentrum des alten Handels.',
+    longDescription:
+        'Am Marktplatz trafen sich Händler, Reisende und Bewohner. Hier begann das Leben der Stadt – und viele Geschichten nahmen hier ihren Anfang.',
+    category: 'Stadt',
+    estimatedDuration: Duration(minutes: 15),
+    imagePath: 'assets/images/spots/marktplatz.jpg',
+  ),
+  Spot(
+    id: 'bludenz_altstadt',
     title: 'Altstadt Bludenz',
     city: 'Bludenz',
-    shortDescription:
-        'Altstadtflair, Geschichte und viele mögliche Geschichten.',
+    shortDescription: 'Enge Gassen und alpine Atmosphäre.',
     longDescription:
-        'Die Altstadt von Bludenz bietet sich für eine entdeckungsbasierte '
-        'Route sehr gut an. Enge Gassen, markante Plätze und historische '
-        'Bezüge machen solche Orte ideal für kleine Erlebnisstationen mit '
-        'Audio, Rätseln oder erzählerischen Elementen.',
-    category: 'Altstadt',
-    estimatedDuration: Duration(minutes: 30),
+        'Die Altstadt von Bludenz wirkt ruhig, doch zwischen den Mauern liegen viele Spuren vergangener Wege und Geschichten.',
+    category: 'Stadt',
+    estimatedDuration: Duration(minutes: 15),
+    imagePath: 'assets/images/spots/bludenz.jpg',
   ),
 ];

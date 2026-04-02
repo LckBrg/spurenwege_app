@@ -6,6 +6,7 @@ class Spot {
   final String longDescription;
   final String category;
   final Duration estimatedDuration;
+  final String imagePath;
 
   const Spot({
     required this.id,
@@ -15,5 +16,6 @@ class Spot {
     required this.longDescription,
     required this.category,
     required this.estimatedDuration,
+    required this.imagePath,
   });
 }
